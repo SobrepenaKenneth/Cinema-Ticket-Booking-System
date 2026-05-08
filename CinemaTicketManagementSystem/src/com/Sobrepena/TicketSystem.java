@@ -535,17 +535,31 @@ public class TicketSystem extends JFrame {
 
 	void selectMovie() {
 		String selected = cmbMovie.getSelectedItem().toString();
-		int total = Integer.parseInt(lblTotalCost.getText()) - added;
-		int multiplier = (int) spinnerTickets.getValue();
+		int ticketCount = (int) spinnerTickets.getValue();
 
-		if (selected.contains("LOTR"))
-			added = 900;
-		if (selected.contains("Avatar"))
-			added = 600;
-		if (selected.contains("Avengers"))
-			added = 500;
-		lblTotalCost.setText(String.valueOf(added * multiplier));
+		int moviePrice = 0;
+		if (selected.contains("LOTR")) {
+			moviePrice = 900;
+		} else if (selected.contains("Avatar")) {
+			moviePrice = 600;
+		} else if (selected.contains("Avengers")) {
+			moviePrice = 500;
+		}
 
+		int seatPrice = rdbtnRegular.isSelected() ? 200 : 400;
+
+		int ticketPrice = moviePrice + seatPrice;
+
+		int total = ticketPrice * ticketCount;
+
+		if (chkPopcorn.isSelected()) {
+			total += 200 * ticketCount;
+		}
+		if (chkDrinks.isSelected()) {
+			total += 50 * ticketCount;
+		}
+
+		lblTotalCost.setText(String.valueOf(total));
 	}
 
 	ItemListener getSelected = new ItemListener() {
@@ -591,20 +605,21 @@ public class TicketSystem extends JFrame {
 	void newBooking() {
 
 		tabbedPane.setSelectedIndex(0);
-		clearInputs();
 	}
 
 	void clearInputs() {
-	    int confirm = JOptionPane.showConfirmDialog(contentPane, "Are you sure you want to clear all inputs?",  "Clear Form",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-		
+		int confirm = JOptionPane.showConfirmDialog(contentPane, "Are you sure you want to clear all inputs?",
+				"Clear Form", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-		txtName.setText("");
-		spinnerTickets.setValue(1);
-		cmbMovie.setSelectedIndex(0);
-		rdbtnRegular.setSelected(true);
-		chkPopcorn.setSelected(false);
-		chkDrinks.setSelected(false);
-		lblTotalCost.setText(String.valueOf(0));
+		if (confirm == JOptionPane.YES_OPTION) {
+			txtName.setText("");
+			spinnerTickets.setValue(1);
+			cmbMovie.setSelectedIndex(0);
+			rdbtnRegular.setSelected(true);
+			chkPopcorn.setSelected(false);
+			chkDrinks.setSelected(false);
+			lblTotalCost.setText(String.valueOf(0));
+		}
 
 	}
 }
