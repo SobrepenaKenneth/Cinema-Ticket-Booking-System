@@ -509,7 +509,7 @@ public class TicketSystem extends JFrame {
 			added = 600;
 		if (selected.contains("Avengers"))
 			added = 500;
-		lblTotalCost.setText(String.valueOf((added + total) * multiplier));
+		lblTotalCost.setText(String.valueOf(added * multiplier));
 
 	}
 
