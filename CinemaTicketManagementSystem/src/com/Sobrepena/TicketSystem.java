@@ -64,7 +64,7 @@ public class TicketSystem extends JFrame {
 	private final JCheckBox chkDrinks = new JCheckBox("Drinks");
 	private final JSeparator separator_2 = new JSeparator();
 	private final JSeparator separator_2_1 = new JSeparator();
-	private final JLabel lblRegularPrice_1 = new JLabel("₱ 200");
+	private final JLabel lblRegularPrice_1 = new JLabel("₱ 100");
 	private final JLabel lblRegularPrice_1_1 = new JLabel("₱ 50");
 	private final JPanel footerPanel = new JPanel();
 	// Total cost will update automatically based on your selections.
@@ -474,7 +474,7 @@ public class TicketSystem extends JFrame {
 		int total = ticketPrice * ticketCount;
 
 		if (chkPopcorn.isSelected()) {
-			total += 200 * ticketCount;
+			total += 100 * ticketCount;
 		}
 		if (chkDrinks.isSelected()) {
 			total += 50 * ticketCount;
@@ -530,7 +530,6 @@ public class TicketSystem extends JFrame {
 			tabbedPane.setSelectedIndex(1);
 
 		}
-		clearInputs();
 	}
 
 	void selectMovie() {
@@ -553,7 +552,7 @@ public class TicketSystem extends JFrame {
 		int total = ticketPrice * ticketCount;
 
 		if (chkPopcorn.isSelected()) {
-			total += 200 * ticketCount;
+			total += 100 * ticketCount;
 		}
 		if (chkDrinks.isSelected()) {
 			total += 50 * ticketCount;
@@ -577,7 +576,7 @@ public class TicketSystem extends JFrame {
 				if (source == rdbtnVip)
 					total += 400;
 				if (source == chkPopcorn)
-					total += 200;
+					total += 100;
 				if (source == chkDrinks)
 					total += 50;
 
@@ -588,7 +587,7 @@ public class TicketSystem extends JFrame {
 				if (source == rdbtnVip)
 					total -= 400;
 				if (source == chkPopcorn)
-					total -= 200;
+					total -= 100;
 				if (source == chkDrinks)
 					total -= 50;
 
@@ -603,7 +602,7 @@ public class TicketSystem extends JFrame {
 	private final JMenuItem mEXIT = new JMenuItem("EXIT");
 
 	void newBooking() {
-
+		clearInputs2();
 		tabbedPane.setSelectedIndex(0);
 	}
 
@@ -620,6 +619,20 @@ public class TicketSystem extends JFrame {
 			chkDrinks.setSelected(false);
 			lblTotalCost.setText(String.valueOf(0));
 		}
+	}
+	
+	void clearInputs2() {
+		int confirm = JOptionPane.showConfirmDialog(contentPane, "Are you sure you want to create a new booking?",
+				"Clear Form", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
+		if (confirm == JOptionPane.YES_OPTION) {
+			txtName.setText("");
+			spinnerTickets.setValue(1);
+			cmbMovie.setSelectedIndex(0);
+			rdbtnRegular.setSelected(true);
+			chkPopcorn.setSelected(false);
+			chkDrinks.setSelected(false);
+			lblTotalCost.setText(String.valueOf(0));
+		}
 	}
 }
