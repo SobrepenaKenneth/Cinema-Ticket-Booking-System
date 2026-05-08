@@ -595,6 +595,8 @@ public class TicketSystem extends JFrame {
 	}
 
 	void clearInputs() {
+	    int confirm = JOptionPane.showConfirmDialog(contentPane, "Are you sure you want to clear all inputs?",  "Clear Form",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+		
 
 		txtName.setText("");
 		spinnerTickets.setValue(1);
