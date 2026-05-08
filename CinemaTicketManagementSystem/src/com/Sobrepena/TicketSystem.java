@@ -165,6 +165,7 @@ public class TicketSystem extends JFrame {
 				.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 		spinnerTickets.setBounds(201, 18, 128, 20);
 		ticketAmountPanel.add(spinnerTickets);
+		spinnerTickets.addChangeListener(e -> calculateTotalCost());
 
 		customerInformationPanel.add(lblSelectMovie);
 		cmbMovie.addActionListener(e -> selectMovie());
@@ -446,6 +447,40 @@ public class TicketSystem extends JFrame {
 
 		footerPanel.add(lblFooter_1);
 
+	}
+
+	private void calculateTotalCost() {
+		int ticketCount = (int) spinnerTickets.getValue();
+		int moviePrice = 0;
+
+		String selectedMovie = cmbMovie.getSelectedItem().toString();
+		if (selectedMovie.contains("LOTR")) {
+			moviePrice = 900;
+		} else if (selectedMovie.contains("Avatar")) {
+			moviePrice = 600;
+		} else if (selectedMovie.contains("Avengers")) {
+			moviePrice = 500;
+		}
+
+		int seatPrice = 0;
+		if (rdbtnRegular.isSelected()) {
+			seatPrice = 200;
+		} else if (rdbtnVip.isSelected()) {
+			seatPrice = 400;
+		}
+
+		int ticketPrice = moviePrice + seatPrice;
+
+		int total = ticketPrice * ticketCount;
+
+		if (chkPopcorn.isSelected()) {
+			total += 200 * ticketCount;
+		}
+		if (chkDrinks.isSelected()) {
+			total += 50 * ticketCount;
+		}
+
+		lblTotalCost.setText(String.valueOf(total));
 	}
 
 	public void bookTicket() {
