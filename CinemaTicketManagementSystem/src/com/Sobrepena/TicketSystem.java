@@ -1,28 +1,31 @@
-package com.Sobrepena;
-
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTabbedPane;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.ImageIcon;
-import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
-import javax.swing.JCheckBox;
-import javax.swing.JButton;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JMenuItem;
 
 public class TicketSystem extends JFrame {
 
@@ -34,8 +37,7 @@ public class TicketSystem extends JFrame {
 	
 	// Menu
 	private final JMenuBar menuBar = new JMenuBar();
-	private final JMenu mnNewMenu = new JMenu("New menu");
-	private final JMenu mnNewMenu_1 = new JMenu("New menu");
+	private final JMenu mnNewMenu = new JMenu("BOOKING");
 	
 	// Panel
 	private final JPanel bookingPanel = new JPanel();
@@ -43,10 +45,11 @@ public class TicketSystem extends JFrame {
 	private final JPanel headerPanel = new JPanel();
 	private final JLabel lblHeader = new JLabel("Cinema Ticket Management System");
 	private final JPanel customerInformationPanel = new JPanel();
+	private final JPanel ticketAmountPanel = new JPanel();
 	private final JLabel lblCustomerName = new JLabel("Customer Name:");
-	private final JTextField textField = new JTextField();
+	private final JTextField txtName = new JTextField();
 	private final JLabel lblSelectMovie = new JLabel("Select Movie:");
-	private final JComboBox cboMovies = new JComboBox();
+	private final JComboBox<String> cmbMovie = new JComboBox<>();
 	private final JPanel seatPanel = new JPanel();
 	private final JRadioButton rdbtnRegular = new JRadioButton("Regular");
 	private final JRadioButton rdbtnVip = new JRadioButton("VIP");
@@ -55,8 +58,8 @@ public class TicketSystem extends JFrame {
 	private final JSeparator separator = new JSeparator();
 	private final JSeparator separator_1 = new JSeparator();
 	private final JPanel addOnsPanel = new JPanel();
-	private final JCheckBox chckbxPopcorn = new JCheckBox("Popcorn");
-	private final JCheckBox chckbxDrinks = new JCheckBox("Drinks");
+	private final JCheckBox chkPopcorn = new JCheckBox("Popcorn");
+	private final JCheckBox chkDrinks = new JCheckBox("Drinks");
 	private final JSeparator separator_2 = new JSeparator();
 	private final JSeparator separator_2_1 = new JSeparator();
 	private final JLabel lblRegularPrice_1 = new JLabel("₱ 200");
@@ -68,7 +71,7 @@ public class TicketSystem extends JFrame {
 	private final JButton btnNewButton = new JButton("Book Ticket");
 	private final JPanel totalCostPanel = new JPanel();
 	private final JPanel borderPanel = new JPanel();
-	private final JLabel lblTotalCost = new JLabel("₱ 0");
+	private final JLabel lblTotalCost = new JLabel("0");
 	private final JLabel lbltotalInfo = new JLabel("(Total will update automatically)");
 	private final JLabel lblBookingSummary = new JLabel("Booking Summary");
 	private final JLabel lblLineBorder = new JLabel("►------------------------◄");
@@ -89,7 +92,7 @@ public class TicketSystem extends JFrame {
 	private final JLabel lblCustomerName_2_1_1_1_1 = new JLabel("Popcorn");
 	private final JLabel lblCustomerName_2_1_1_1_1_1 = new JLabel("Drinks");
 	private final JLabel lblPopcornYoN = new JLabel("No");
-	private final JLabel lblPopcornYoN_1 = new JLabel("No");
+	private final JLabel lblDrinksYoN = new JLabel("No");
 	private final JSeparator separator_3 = new JSeparator();
 	private final JSeparator separator_3_1 = new JSeparator();
 	private final JLabel lblCustomerName_2_1_1_1_2 = new JLabel("Thank you! your booking has been confirmed.");
@@ -97,7 +100,11 @@ public class TicketSystem extends JFrame {
 	private final JButton btnNewBooking = new JButton("New Booking");
 	private final JLabel lblCustomerName_2_1_1_1_2_1_1 = new JLabel("Click to make a new booking, And return to the");
 	private final JLabel lblCustomerName_2_1_1_1_2_1_1_1 = new JLabel("Booking tab");
+	private JSpinner spinnerTickets;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 
+	private int added = 0;
+	private int totalVal = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -141,27 +148,39 @@ public class TicketSystem extends JFrame {
 		lblCustomerName.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
 		
 		customerInformationPanel.add(lblCustomerName);
-		textField.setBounds(164, 11, 185, 27);
-		textField.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		textField.setColumns(10);
+		txtName.setBounds(164, 11, 185, 27);
+		txtName.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+		txtName.setColumns(10);
 		
-		customerInformationPanel.add(textField);
+		customerInformationPanel.add(txtName);
 		lblSelectMovie.setBounds(21, 48, 92, 21);
 		lblSelectMovie.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
 		
-		customerInformationPanel.add(lblSelectMovie);
-		cboMovies.setBounds(164, 48, 185, 27);
+		spinnerTickets = new JSpinner();
+		spinnerTickets.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+		spinnerTickets.setBounds(201, 18, 128, 20);
+		ticketAmountPanel.add(spinnerTickets);
 		
-		customerInformationPanel.add(cboMovies);
+		customerInformationPanel.add(lblSelectMovie);
+		cmbMovie.addActionListener(e -> selectMovie());
+		cmbMovie.setBounds(164, 48, 185, 27);
+		cmbMovie.addItem("LOTR - \u20B1 900");
+		cmbMovie.addItem("Avengers - \u20B1 500");
+		cmbMovie.addItem("Avatar - \u20B1 600");
+		customerInformationPanel.add(cmbMovie);
 		seatPanel.setBorder(new TitledBorder(new LineBorder(new Color(100, 149, 237), 2), " Seat Type (Per Ticket) ", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(30, 144, 255)));
-		seatPanel.setBounds(10, 91, 340, 99);
+		seatPanel.setBounds(9, 80, 340, 99);
 		
 		customerInformationPanel.add(seatPanel);
 		seatPanel.setLayout(null);
+		buttonGroup.add(rdbtnRegular);
+		rdbtnRegular.addItemListener(getSelected);
 		rdbtnRegular.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
 		rdbtnRegular.setBounds(25, 21, 84, 26);
 		
 		seatPanel.add(rdbtnRegular);
+		buttonGroup.add(rdbtnVip);
+		rdbtnVip.addItemListener(getSelected);
 		rdbtnVip.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
 		rdbtnVip.setBounds(25, 55, 53, 20);
 		
@@ -183,18 +202,20 @@ public class TicketSystem extends JFrame {
 		
 		seatPanel.add(separator_1);
 		addOnsPanel.setBorder(new TitledBorder(new LineBorder(new Color(100, 149, 237), 2), " Add-Ons ", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(30, 144, 255)));
-		addOnsPanel.setBounds(10, 215, 339, 104);
+		addOnsPanel.setBounds(10, 179, 339, 104);
 		
 		customerInformationPanel.add(addOnsPanel);
 		addOnsPanel.setLayout(null);
-		chckbxPopcorn.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
-		chckbxPopcorn.setBounds(27, 25, 93, 21);
+		chkPopcorn.addItemListener(getSelected);
+		chkPopcorn.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
+		chkPopcorn.setBounds(27, 25, 93, 21);
 		
-		addOnsPanel.add(chckbxPopcorn);
-		chckbxDrinks.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
-		chckbxDrinks.setBounds(27, 60, 93, 21);
+		addOnsPanel.add(chkPopcorn);
+		chkDrinks.addItemListener(getSelected);
+		chkDrinks.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
+		chkDrinks.setBounds(27, 60, 93, 21);
 		
-		addOnsPanel.add(chckbxDrinks);
+		addOnsPanel.add(chkDrinks);
 		separator_2.setBounds(117, 40, 110, 2);
 		
 		addOnsPanel.add(separator_2);
@@ -211,6 +232,14 @@ public class TicketSystem extends JFrame {
 		lblRegularPrice_1_1.setBounds(237, 60, 92, 21);
 		
 		addOnsPanel.add(lblRegularPrice_1_1);
+		ticketAmountPanel.setLayout(null);
+		ticketAmountPanel.setBorder(new TitledBorder(new LineBorder(new Color(100, 149, 237), 2), " Ticket Order Quantity ", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(30, 144, 255)));
+		ticketAmountPanel.setBounds(9, 286, 339, 49);
+		
+		customerInformationPanel.add(ticketAmountPanel);
+		
+		
+		btnNewButton.addActionListener(e -> bookTicket());
 		btnNewButton.setBackground(new Color(60, 179, 113));
 		btnNewButton.setForeground(new Color(255, 255, 255));
 		btnNewButton.setFont(new Font("Segoe UI Black", Font.PLAIN, 20));
@@ -228,7 +257,7 @@ public class TicketSystem extends JFrame {
 		
 		totalCostPanel.add(borderPanel);
 		borderPanel.setLayout(null);
-		lblTotalCost.setBounds(62, 21, 145, 47);
+		lblTotalCost.setBounds(67, 21, 140, 47);
 		lblTotalCost.setForeground(new Color(34, 139, 34));
 		lblTotalCost.setFont(new Font("Segoe UI", Font.BOLD, 40));
 		
@@ -237,6 +266,12 @@ public class TicketSystem extends JFrame {
 		lbltotalInfo.setBounds(32, 78, 175, 21);
 		
 		borderPanel.add(lbltotalInfo);
+		
+		JLabel lblPeso = new JLabel("₱");
+		lblPeso.setForeground(new Color(34, 139, 34));
+		lblPeso.setFont(new Font("Segoe UI", Font.BOLD, 40));
+		lblPeso.setBounds(32, 21, 34, 47);
+		borderPanel.add(lblPeso);
 		tabbedPane.addTab("2. Summary", null, summaryPanel, null);
 		summaryPanel.setLayout(null);
 		lblBookingSummary.setForeground(new Color(30, 144, 255));
@@ -310,10 +345,10 @@ public class TicketSystem extends JFrame {
 		lblPopcornYoN.setBounds(212, 10, 53, 21);
 		
 		addOnsSummaryPanel.add(lblPopcornYoN);
-		lblPopcornYoN_1.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
-		lblPopcornYoN_1.setBounds(212, 35, 52, 21);
+		lblDrinksYoN.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
+		lblDrinksYoN.setBounds(212, 35, 52, 21);
 		
-		addOnsSummaryPanel.add(lblPopcornYoN_1);
+		addOnsSummaryPanel.add(lblDrinksYoN);
 		separator_3.setBounds(169, 22, 37, 5);
 		
 		addOnsSummaryPanel.add(separator_3);
@@ -345,6 +380,7 @@ public class TicketSystem extends JFrame {
 		lblCustomerName_2_1_1_1_2_1.setBounds(10, 352, 324, 21);
 		
 		summaryPanel.add(lblCustomerName_2_1_1_1_2_1);
+		btnNewBooking.addActionListener(e -> newBooking());
 		btnNewBooking.setForeground(Color.WHITE);
 		btnNewBooking.setFont(new Font("Segoe UI Black", Font.PLAIN, 20));
 		btnNewBooking.setBackground(new Color(60, 179, 113));
@@ -363,7 +399,19 @@ public class TicketSystem extends JFrame {
 		
 		// MenuBar
 		menuBar.add(mnNewMenu);
-		menuBar.add(mnNewMenu_1);
+		mBook.addActionListener(e -> newBooking());
+		
+		mnNewMenu.add(mBook);
+		
+		JMenuItem mCLEAR = new JMenuItem("CLEAR");
+		mCLEAR.addActionListener(e -> clearInputs());
+		mnNewMenu.add(mCLEAR);
+		
+		JSeparator separator_4 = new JSeparator();
+		mnNewMenu.add(separator_4);
+		mEXIT.addActionListener(e -> System.exit(0));
+		
+		mnNewMenu.add(mEXIT);
 		menuBar.setBounds(0, 0, 641, 21);
 
 		// Content Pane
@@ -390,8 +438,121 @@ public class TicketSystem extends JFrame {
 		
 		footerPanel.add(lblFooter_1);
 		
-		
-		
+	}
+	
+	public void bookTicket() {
+        String name = txtName.getText().trim();
 
+		if (name.isEmpty()) {
+			JOptionPane.showMessageDialog(this,
+					"Customer name is required!",
+					"Validation Error",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+        int tickets = (int) spinnerTickets.getValue();
+         if (tickets < 1) { 
+            JOptionPane.showMessageDialog(this,
+                    "Number of tickets must be at least 1!",
+                    "Validation Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+    }
+
+    int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to book " + tickets + " ticket(s) for " + name + "?",
+            "Confirm Booking",
+            JOptionPane.YES_NO_OPTION);
+    
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        String movie = cmbMovie.getSelectedItem().toString();
+        String seatType = rdbtnRegular.isSelected() ? "Regular" : "VIP";
+
+				if (chkPopcorn.isSelected()) lblPopcornYoN.setText("Yes");
+				else lblPopcornYoN.setText("No");
+
+				if (chkDrinks.isSelected()) lblDrinksYoN.setText("Yes");
+				else lblDrinksYoN.setText("No");
+			
+         String total = lblTotalCost.getText();
+
+
+         // Display Summary
+			lblCustomerName.setText(name);
+			lblMovieTypeSummary.setText(movie);
+			lblSeatTypeSummary.setText(seatType);
+			lblTicketSummary.setText(String.valueOf(tickets));
+			lblTotalSummary.setText("\u20B1" + total);
+			
+			// Switch to Summary Tab
+			tabbedPane.setSelectedIndex(1);
+
+       }
+    	clearInputs();
+    }
+	
+	void selectMovie() {
+		String selected = cmbMovie.getSelectedItem().toString();
+		int total = Integer.parseInt(lblTotalCost.getText()) - added;
+		int multiplier = (int) spinnerTickets.getValue();
+		
+		if(selected.contains("LOTR")) added = 900;
+		if(selected.contains("Avatar")) added = 600;
+		if(selected.contains("Avengers")) added = 500;
+		lblTotalCost.setText(String.valueOf((added + total) * multiplier));
+		
+	}
+	
+	
+	ItemListener getSelected = new ItemListener() {
+		
+		public void itemStateChanged(ItemEvent e) {
+			
+			var source = e.getSource();
+			int state = e.getStateChange();
+			int total = Integer.parseInt(lblTotalCost.getText());
+			int multiplier = (int) spinnerTickets.getValue();
+			if(state == ItemEvent.SELECTED) {
+				
+			if(source == rdbtnRegular) total += 200;
+			if(source == rdbtnVip) total += 400;
+			if(source == chkPopcorn) total += 200;
+			if(source == chkDrinks) total += 50;
+			
+			} else {
+				
+			if(source == rdbtnRegular) total -= 200;
+			if(source == rdbtnVip) total -= 400;
+			if(source == chkPopcorn) total -= 200;
+			if(source == chkDrinks) total -= 50;
+				
+			}
+			
+			lblTotalCost.setText(String.valueOf(multiplier * total));
+			
+		}
+		
+	};
+	private final JMenuItem mBook = new JMenuItem("BOOK");
+	private final JMenuItem mEXIT = new JMenuItem("EXIT");
+	
+	void newBooking() {
+		
+		tabbedPane.setSelectedIndex(0);
+		clearInputs();
+	}
+	
+	void clearInputs() {
+		
+		txtName.setText("");
+		spinnerTickets.setValue(1);
+		cmbMovie.setSelectedIndex(0);
+		rdbtnRegular.setSelected(true);
+		chkPopcorn.setSelected(false);
+		chkDrinks.setSelected(false);
+		lblTotalCost.setText(String.valueOf(0));
+		
 	}
 }
